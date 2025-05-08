@@ -7,11 +7,11 @@ from collections import namedtuple,deque
 import torch
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-device = ("cuda" 
-          if torch.cuda.is_available() 
-          else "mps" 
-          if torch.backends.mps.is_available() 
-          else "cpu")
+#device = ("cuda" 
+#          if torch.cuda.is_available() 
+#          else "mps" 
+#          if torch.backends.mps.is_available() 
+#          else "cpu")
 
 class GRU_price(torch.nn.Module):
     def __init__(self):
@@ -32,12 +32,12 @@ class GRU_price(torch.nn.Module):
 class PPORR(torch.nn.Module):
     def __init__(self,inpdim,er_dim=5*5+1,init_pvratio_id = 1):
         super(PPORR,self).__init__()
-        self.inputlayer = torch.nn.Linear(inpdim,64).to(device)
-        self.linear1 = torch.nn.Linear(64,128).to(device)
-        self.linear2 = torch.nn.Linear(128,64).to(device)
+        self.inputlayer = torch.nn.Linear(inpdim,64)
+        self.linear1 = torch.nn.Linear(64,128)
+        self.linear2 = torch.nn.Linear(128,64)
 
-        self.out1 = torch.nn.Linear(64,er_dim).to(device)
-        self.out3 = torch.nn.Linear(64,1).to(device)
+        self.out1 = torch.nn.Linear(64,er_dim)
+        self.out3 = torch.nn.Linear(64,1)
         self.softmax = torch.nn.Softmax(dim=-1)
         
 
@@ -63,12 +63,12 @@ class PPORR(torch.nn.Module):
 class PPORP(torch.nn.Module):
     def __init__(self,inpdim,init_pvratio_id = 1):
         super(PPORP,self).__init__()
-        self.inputlayer = torch.nn.Linear(inpdim,64).to(device)
-        self.linear1 = torch.nn.Linear(64,128).to(device)
-        self.linear2 = torch.nn.Linear(128,64).to(device)
+        self.inputlayer = torch.nn.Linear(inpdim,64)
+        self.linear1 = torch.nn.Linear(64,128)
+        self.linear2 = torch.nn.Linear(128,64)
 
-        self.out2 = torch.nn.Linear(64,2).to(device)
-        self.out3 = torch.nn.Linear(64,1).to(device)
+        self.out2 = torch.nn.Linear(64,2)
+        self.out3 = torch.nn.Linear(64,1)
         self.softmax = torch.nn.Softmax(dim=-1)      
 
 
@@ -112,11 +112,11 @@ class BSS_DRL(object):#
     def __init__(self,Opt,inpdim=6,erdim=5*5+1,ifstep = True ):#
         self.options =  Opt 
                 
-        self.bss_RR = PPORR(inpdim,er_dim=erdim).to(device)#EVRP_DQN(5,TOTAL_POS_NUM).to(device)
-        self.bss_RP = PPORP(inpdim).to(device)#EVRP_DQN(5,TOTAL_POS_NUM).to(device)       
+        self.bss_RR = PPORR(inpdim,er_dim=erdim).to(device)#EVRP_DQN(5,TOTAL_POS_NUM)
+        self.bss_RP = PPORP(inpdim).to(device)#EVRP_DQN(5,TOTAL_POS_NUM)   
         
     #
-    def select_action(self,bssstate):#state_s的格式为bs*ev_num*(state_n)                  
+    def select_action(self,bssstate):#          
         prob1,state_value1 = self.bss_RR(bssstate)    
         prob2,state_value2 = self.bss_RP(bssstate)  
         energy_dist = torch.distributions.categorical.Categorical(prob1)
