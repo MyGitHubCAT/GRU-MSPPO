@@ -507,7 +507,7 @@ class GameManager(object):
         self.UpdateSwapEVBSS()#
         self.UpdateBSSPlan(chargeplan)#
         self.UpdateBSSChargingByCount(energy_act,pv_ratio_act)
-        self.UpdateEVFleet()#
+        self.UpdateEVFleet()#change/add ev fleet event can optimize the env reality.(to reduce the computation, the event is called once each update)
         self.UpdateEnvInf()#
 
     def UpdateEnvdata(self):
